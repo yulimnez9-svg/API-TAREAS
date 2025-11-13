@@ -1,0 +1,32 @@
+### LOGIN - Obtener token
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@doe.com",
+  "password": "password"
+}
+
+### REGISTRO - Crear usuario nuevo
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@doe.com",
+  "password": "password"
+}
+
+### CREAR UNA TAREA (usar token obtenido del login)
+POST http://localhost:3000/todos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+  "title": "Comprar leche",
+  "description": "Leche, pan y huevos"
+}
+
+### LISTAR TAREAS (usar token)
+GET http://localhost:3000/todos
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
