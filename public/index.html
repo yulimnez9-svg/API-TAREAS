@@ -19,6 +19,15 @@
   <div class="container">
     <h1>📝 Mis Tareas</h1>
 
+    <!-- -------------- LOGIN REAL ---------------- -->
+    <h2>Iniciar Sesión</h2>
+    <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+    <input type="password" id="loginPassword" placeholder="Contraseña" />
+    <button id="loginBtn">Login</button>
+
+    <hr />
+
+    <!-- -------------- CREAR TAREA ---------------- -->
     <h2>Agregar nueva tarea</h2>
     <input type="text" id="title" placeholder="Título" />
     <textarea id="description" placeholder="Descripción"></textarea>
@@ -29,36 +38,85 @@
   </div>
 
   <script>
-    // Reemplaza este token por el que obtengas desde /auth/login
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNzY3MDcsImV4cCI6MTc2MzA4MDMwN30.0XiG8F7N5DAkhhvHxRwv9BURtWioeDqPRg87K8ikeqM";
+    let token = null; // El token se guardará aquí después de login
 
+    // -------------- LOGIN REAL --------------
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      if (!email || !password) {
+        alert("Ingresa email y contraseña");
+        return;
+      }
+
+      try {
+        const res = await fetch("/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Error al iniciar sesión");
+          return;
+        }
+
+        token = "Bearer " + data.token;
+        alert("Login exitoso!");
+
+        cargarTareas();
+
+      } catch (error) {
+        console.error(error);
+        alert("Error en el login");
+      }
+    });
+
+    // -------------- CARGAR TAREAS --------------
     async function cargarTareas() {
+      if (!token) {
+        alert("Debes iniciar sesión primero");
+        return;
+      }
+
       try {
         const res = await fetch("/todos", {
           headers: { Authorization: token }
         });
-        if (!res.ok) throw new Error("Error al obtener tareas");
-        const data = await res.json();
 
+        if (!res.ok) throw new Error();
+
+        const data = await res.json();
         const lista = document.getElementById("todoList");
+
         lista.innerHTML = "";
         (data.data || []).forEach(t => {
           const li = document.createElement("li");
           li.textContent = `${t.title} - ${t.description}`;
           lista.appendChild(li);
         });
+
       } catch (error) {
         console.error(error);
-        alert("No se pudieron cargar las tareas. Verifica tu token o el servidor.");
+        alert("Error al cargar tareas");
       }
     }
 
+    // -------------- AGREGAR TAREA --------------
     document.getElementById("addTodo").addEventListener("click", async () => {
+      if (!token) {
+        alert("Debes iniciar sesión primero");
+        return;
+      }
+
       const title = document.getElementById("title").value.trim();
       const description = document.getElementById("description").value.trim();
 
       if (!title) {
-        alert("Por favor ingresa un título para la tarea.");
+        alert("Ingresa un título");
         return;
       }
 
@@ -71,18 +129,19 @@
           },
           body: JSON.stringify({ title, description })
         });
-        if (!res.ok) throw new Error("Error al agregar tarea");
+
+        if (!res.ok) throw new Error();
 
         document.getElementById("title").value = "";
         document.getElementById("description").value = "";
         cargarTareas();
+
       } catch (error) {
         console.error(error);
-        alert("No se pudo agregar la tarea. Verifica tu token o el servidor.");
+        alert("Error al agregar la tarea");
       }
     });
 
-    cargarTareas();
   </script>
 </body>
 </html>
