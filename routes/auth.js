@@ -4,16 +4,16 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
+const JWT_SECRET = "supersecreto123";
+
 // REGISTRO
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Validaciones
     if (!name || !email || !password)
       return res.status(400).json({ message: "Todos los campos son obligatorios" });
 
-    // ¿Usuario existe?
     const exists = await User.findOne({ where: { email } });
     if (exists) return res.status(400).json({ message: "El usuario ya existe" });
 
@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
       password: hashed,
     });
 
-    res.status(201).json({ message: "Usuario creado", user });
+    res.status(201).json({ message: "Usuario creado correctamente" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error en el servidor" });
@@ -37,7 +37,6 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validaciones
     if (!email || !password)
       return res.status(400).json({ message: "Email y password requeridos" });
 
@@ -49,12 +48,13 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      "secreto123",
+      JWT_SECRET,
       { expiresIn: "4h" }
     );
 
-    res.json({ token });
+    res.json({ message: "Login exitoso", token });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error interno" });
   }
 });
