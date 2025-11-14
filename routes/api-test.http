@@ -1,14 +1,4 @@
-
-### LOGIN - Obtener token
-POST http://localhost:3000/auth/login
-Content-Type: application/json
-
-{
-  "email": "yuliana@abc.com",
-  "password": "123456"
-}
-
-### REGISTRO - Crear usuario nuevo
+### REGISTRO
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
@@ -18,16 +8,25 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### CREAR UNA TAREA
+### LOGIN
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "yuliana@abc.com",
+  "password": "123456"
+}
+
+### CREAR TAREA
 POST http://localhost:3000/todos
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNjY1MDEsImV4cCI6MTc2MzA3MDEwMX0.fKyY6CRoiG0vv3ry6ihtiqE6-XSp5lbBMTrMTMp_jeM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNzY3MDcsImV4cCI6MTc2MzA4MDMwN30.0XiG8F7N5DAkhhvHxRwv9BURtWioeDqPRg87K8ikeqM
 
 {
   "title": "Actividad del dia",
   "description": "Aprender Backend"
 }
 
-### LISTAR TAREAS (usar token)
+### LISTAR TAREAS
 GET http://localhost:3000/todos
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNjU2NTgsImV4cCI6MTc2MzA2OTI1OH0.1qvUiBNtQ-OlH377-TVybMq4v1BvaZ6fkq4x3iTD4ws
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNzY3MDcsImV4cCI6MTc2MzA4MDMwN30.0XiG8F7N5DAkhhvHxRwv9BURtWioeDqPRg87K8ikeqM
