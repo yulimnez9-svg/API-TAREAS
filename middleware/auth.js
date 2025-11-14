@@ -1,18 +1,19 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'mi_clave_secreta'; // en producción usa .env
+const JWT_SECRET = 'mi_clave_secreta';
 
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: 'No autorizado' });
+module.exports = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) return res.status(401).json({ message: 'Token no proporcionado' });
 
-  const token = authHeader.split(' ')[1]; // "Bearer <token>"
+  const token = authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token inválido' });
+
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // guardamos datos del usuario en req.user
-    next(); // pasa al siguiente middleware o ruta
+    req.user = decoded;
+    next();
   } catch (err) {
-    res.status(401).json({ message: 'Token inválido' });
+    console.error('Error en token:', err);
+    res.status(403).json({ message: 'Token inválido o expirado' });
   }
-}
-
-module.exports = authMiddleware;
+};

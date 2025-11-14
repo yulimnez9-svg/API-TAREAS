@@ -1,10 +1,11 @@
+
 ### LOGIN - Obtener token
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "john@doe.com",
-  "password": "password"
+  "email": "yuliana@abc.com",
+  "password": "123456"
 }
 
 ### REGISTRO - Crear usuario nuevo
@@ -12,21 +13,21 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john@doe.com",
-  "password": "password"
+  "name": "Yulian Cruz",
+  "email": "yuliana@abc.com",
+  "password": "123456"
 }
 
-### CREAR UNA TAREA (usar token obtenido del login)
+### CREAR UNA TAREA
 POST http://localhost:3000/todos
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNjY1MDEsImV4cCI6MTc2MzA3MDEwMX0.fKyY6CRoiG0vv3ry6ihtiqE6-XSp5lbBMTrMTMp_jeM
 
 {
-  "title": "Comprar leche",
-  "description": "Leche, pan y huevos"
+  "title": "Actividad del dia",
+  "description": "Aprender Backend"
 }
 
 ### LISTAR TAREAS (usar token)
 GET http://localhost:3000/todos
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNjU2NTgsImV4cCI6MTc2MzA2OTI1OH0.1qvUiBNtQ-OlH377-TVybMq4v1BvaZ6fkq4x3iTD4ws

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App de Tareas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f2f2f2; }
+    h1 { color: #333; }
+    .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, textarea, button { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+    button { background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; background: #e9ecef; margin-bottom: 5px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Mis Tareas</h1>
+
+    <h2>Agregar nueva tarea</h2>
+    <input type="text" id="title" placeholder="Título" />
+    <textarea id="description" placeholder="Descripción"></textarea>
+    <button id="addTodo">Agregar tarea</button>
+
+    <h2>Tareas existentes</h2>
+    <ul id="todoList"></ul>
+  </div>
+
+  <script>
+    // Reemplaza este token por el que obtengas desde /auth/login
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5dWxpYW5hQGFiYy5jb20iLCJpYXQiOjE3NjMwNzY3MDcsImV4cCI6MTc2MzA4MDMwN30.0XiG8F7N5DAkhhvHxRwv9BURtWioeDqPRg87K8ikeqM";
+
+    async function cargarTareas() {
+      try {
+        const res = await fetch("/todos", {
+          headers: { Authorization: token }
+        });
+        if (!res.ok) throw new Error("Error al obtener tareas");
+        const data = await res.json();
+
+        const lista = document.getElementById("todoList");
+        lista.innerHTML = "";
+        (data.data || []).forEach(t => {
+          const li = document.createElement("li");
+          li.textContent = `${t.title} - ${t.description}`;
+          lista.appendChild(li);
+        });
+      } catch (error) {
+        console.error(error);
+        alert("No se pudieron cargar las tareas. Verifica tu token o el servidor.");
+      }
+    }
+
+    document.getElementById("addTodo").addEventListener("click", async () => {
+      const title = document.getElementById("title").value.trim();
+      const description = document.getElementById("description").value.trim();
+
+      if (!title) {
+        alert("Por favor ingresa un título para la tarea.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/todos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+          },
+          body: JSON.stringify({ title, description })
+        });
+        if (!res.ok) throw new Error("Error al agregar tarea");
+
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+        cargarTareas();
+      } catch (error) {
+        console.error(error);
+        alert("No se pudo agregar la tarea. Verifica tu token o el servidor.");
+      }
+    });
+
+    cargarTareas();
+  </script>
+</body>
+</html>

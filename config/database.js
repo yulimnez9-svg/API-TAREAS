@@ -1,10 +1,10 @@
+const { Sequelize } = require('sequelize');
 
-const { Sequelize } = require('sequelize'); // CommonJS
-
-// Crea la instancia de Sequelize
+// Base de datos SQLite
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: './database.sqlite', // ruta al archivo de SQLite
+  storage: './database.sqlite', // archivo SQLite
+  logging: false,
 });
 
-module.exports = sequelize; // exporta la instancia
+module.exports = sequelize;
